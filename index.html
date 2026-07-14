@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Telas MVP — App de Serviços</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1734;
+    --blue-900:#0F2A6B;
+    --blue-700:#1E49E2;
+    --blue-600:#2F5CFF;
+    --blue-500:#4C6FFF;
+    --blue-400:#7C97FF;
+    --blue-100:#E7EEFF;
+    --blue-050:#F4F7FF;
+    --ink:#0F1222;
+    --gray-600:#5B6270;
+    --gray-400:#8A90A2;
+    --gray-200:#E3E7F0;
+    --gray-100:#F1F3F9;
+    --white:#FFFFFF;
+    --gold:#F5A93B;
+    --green:#1FA463;
+    --red:#E5484D;
+    --r-lg:24px;
+    --r-md:14px;
+    --r-sm:9px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--blue-050);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    padding:48px 40px 120px;
+  }
+  .page-head{
+    max-width:920px;
+    margin:0 auto 56px;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Inter';font-weight:700;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--blue-700);
+    background:var(--blue-100);padding:6px 14px;border-radius:999px;margin-bottom:18px;
+  }
+  h1.title{
+    font-family:'Sora',sans-serif;font-weight:800;font-size:40px;line-height:1.08;
+    margin:0 0 14px;color:var(--navy);
+  }
+  .page-head p{
+    font-size:16px;line-height:1.6;color:var(--gray-600);max-width:640px;margin:0;
+  }
+  .legend{
+    display:flex;gap:22px;margin-top:28px;flex-wrap:wrap;
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);font-weight:500;}
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.blue{background:var(--blue-600);}
+  .dot.gold{background:var(--gold);}
+
+  .module{max-width:1400px;margin:0 auto 72px;}
+  .module-head{
+    display:flex;align-items:baseline;gap:14px;margin-bottom:26px;
+    border-bottom:1px solid var(--gray-200);padding-bottom:14px;
+  }
+  .module-num{
+    font-family:'Sora';font-weight:800;font-size:15px;color:var(--white);
+    background:var(--navy);width:34px;height:34px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .module-title{font-family:'Sora';font-weight:700;font-size:21px;color:var(--navy);margin:0;}
+  .module-sub{font-size:13px;color:var(--gray-400);margin-left:auto;font-weight:500;}
+  .screens-grid{display:flex;flex-wrap:wrap;gap:36px;}
+
+  .screen-block{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .screen-label{
+    display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy);
+  }
+  .tag-new{
+    font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--navy);
+    background:var(--gold);padding:2px 8px;border-radius:999px;text-transform:uppercase;
+  }
+
+  /* PHONE FRAME */
+  .phone{
+    width:262px;height:544px;background:var(--navy);border-radius:38px;
+    padding:10px;box-shadow:0 24px 48px -18px rgba(15,23,66,.35), 0 2px 6px rgba(15,23,66,.15);
+    flex:none;
+  }
+  .screen{
+    width:100%;height:100%;background:var(--white);border-radius:29px;overflow:hidden;
+    position:relative;display:flex;flex-direction:column;
+  }
+  .statusbar{
+    height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;font-size:11px;font-weight:700;color:var(--ink);background:var(--white);
+  }
+  .statusbar .icons{display:flex;gap:4px;align-items:center;}
+  .sb-bars{display:flex;gap:2px;align-items:flex-end;}
+  .sb-bars span{width:2.5px;background:var(--ink);border-radius:1px;}
+  .sb-bars span:nth-child(1){height:4px;} .sb-bars span:nth-child(2){height:6px;}
+  .sb-bars span:nth-child(3){height:8px;} .sb-bars span:nth-child(4){height:10px;}
+  .sb-batt{width:18px;height:9px;border:1.4px solid var(--ink);border-radius:2px;position:relative;}
+  .sb-batt::after{content:"";position:absolute;right:-3px;top:2px;width:2px;height:5px;background:var(--ink);border-radius:0 1px 1px 0;}
+  .sb-batt::before{content:"";position:absolute;inset:1.5px;background:var(--ink);border-radius:1px;width:75%;}
+
+  .appbar{
+    flex:none;padding:12px 16px;display:flex;align-items:center;gap:10px;background:var(--white);
+    border-bottom:1px solid var(--gray-100);
+  }
+  .appbar.blue{background:var(--blue-700);color:var(--white);border-bottom:none;}
+  .appbar h3{font-family:'Sora';font-size:15px;font-weight:700;margin:0;flex:1;}
+  .appbar.blue h3{color:var(--white);}
+  .icon{width:19px;height:19px;flex:none;}
+  .icon-btn{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:var(--gray-100);flex:none;}
+  .appbar.blue .icon-btn{background:rgba(255,255,255,.16);}
+
+  .body{flex:1;overflow:hidden;padding:16px;background:var(--blue-050);position:relative;}
+  .body.white{background:var(--white);}
+  .body.nopad{padding:0;}
+
+  /* generic UI kit */
+  .logo-mark{
+    width:52px;height:52px;border-radius:16px;background:var(--blue-700);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 10px;
+  }
+  .brand{font-family:'Sora';font-weight:800;font-size:19px;text-align:center;color:var(--navy);margin:0 0 2px;}
+  .tagline{font-size:11.5px;color:var(--gray-400);text-align:center;margin:0 0 22px;line-height:1.4;}
+
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:5px;}
+  .input{
+    width:100%;border:1.5px solid var(--gray-200);border-radius:var(--r-sm);padding:10px 12px;
+    font-size:12.5px;font-family:'Inter';color:var(--ink);background:var(--white);
+  }
+  .input::placeholder{color:var(--gray-400);}
+  textarea.input{resize:none;height:56px;}
+
+  .btn{
+    width:100%;text-align:center;padding:12px;border-radius:var(--r-sm);font-weight:700;font-size:12.5px;
+    font-family:'Inter';border:none;cursor:default;
+  }
+  .btn-primary{background:var(--blue-700);color:var(--white);}
+  .btn-secondary{background:var(--white);color:var(--blue-700);border:1.5px solid var(--blue-700);}
+  .btn-ghost{background:transparent;color:var(--gray-600);border:1.5px solid var(--gray-200);}
+  .btn-danger{background:var(--white);color:var(--red);border:1.5px solid #F3C6C7;}
+  .btn-sm{padding:8px 10px;font-size:11px;width:auto;}
+
+  .link{color:var(--blue-700);font-size:11.5px;font-weight:600;text-align:center;}
+  .divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--gray-400);font-size:10.5px;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--gray-200);}
+  .center{text-align:center;}
+
+  .checkrow{display:flex;gap:8px;align-items:flex-start;font-size:10.5px;color:var(--gray-600);margin:10px 0 16px;line-height:1.4;}
+  .checkbox{width:15px;height:15px;border:1.5px solid var(--blue-500);border-radius:4px;flex:none;background:var(--blue-700);display:flex;align-items:center;justify-content:center;}
+
+  .card{background:var(--white);border-radius:var(--r-md);padding:12px;box-shadow:0 4px 14px -8px rgba(15,23,66,.18);margin-bottom:10px;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .between{justify-content:space-between;}
+
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--blue-100);display:flex;align-items:center;justify-content:center;flex:none;}
+  .avatar.lg{width:64px;height:64px;}
+  .avatar svg{width:60%;height:60%;color:var(--blue-600);}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;
+    font-size:10.5px;font-weight:600;border:1.4px solid var(--gray-200);color:var(--gray-600);background:var(--white);
+  }
+  .chip.on{background:var(--blue-700);border-color:var(--blue-700);color:var(--white);}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;}
+
+  .badge{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:999px;}
+  .badge.open{background:#FFF1D6;color:#96660B;}
+  .badge.progress{background:var(--blue-100);color:var(--blue-700);}
+  .badge.done{background:#DEF7E9;color:var(--green);}
+  .badge.cancel{background:#FBE2E2;color:var(--red);}
+
+  .stars{display:flex;gap:2px;}
+  .stars svg{width:12px;height:12px;color:var(--gold);}
+  .stars svg.off{color:var(--gray-200);}
+
+  .thumb{width:44px;height:44px;border-radius:9px;background:var(--blue-100);display:flex;align-items:center;justify-content:center;flex:none;}
+  .thumb svg{width:40%;height:40%;color:var(--blue-500);}
+  .thumb.add{border:1.5px dashed var(--blue-300,#B9C6FF);background:var(--white);}
+
+  .bottomnav{
+    flex:none;display:flex;justify-content:space-around;align-items:center;padding:9px 6px 12px;
+    background:var(--white);border-top:1px solid var(--gray-100);
+  }
+  .navitem{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--gray-400);}
+  .navitem.active{color:var(--blue-700);}
+  .navitem svg{width:19px;height:19px;}
+  .navitem span{font-size:8.5px;font-weight:600;}
+
+  .fab{
+    position:absolute;right:14px;bottom:70px;width:42px;height:42px;border-radius:14px;background:var(--blue-700);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 10px 18px -6px rgba(30,73,226,.55);
+  }
+  .fab svg{width:20px;height:20px;color:var(--white);}
+
+  .section-label{font-size:10.5px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px;}
+
+  .stepper{display:flex;align-items:center;margin-bottom:14px;}
+  .step{width:9px;height:9px;border-radius:50%;background:var(--gray-200);flex:none;}
+  .step.done{background:var(--blue-700);}
+  .step-line{flex:1;height:2px;background:var(--gray-200);}
+  .step-line.done{background:var(--blue-700);}
+  .step-labels{display:flex;justify-content:space-between;font-size:8px;color:var(--gray-400);font-weight:600;margin-top:4px;}
+
+  /* map screen */
+  .mapbg{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,.5), transparent 40%),
+      repeating-linear-gradient(0deg, var(--blue-100) 0 1px, transparent 1px 34px),
+      repeating-linear-gradient(90deg, var(--blue-100) 0 1px, transparent 1px 34px),
+      var(--blue-050);
+  }
+  .pin{
+    position:absolute;width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--blue-700);
+    transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 12px -4px rgba(15,23,66,.4);
+  }
+  .pin svg{transform:rotate(45deg);width:14px;height:14px;color:var(--white);}
+  .pin.me{background:var(--navy);}
+  .sheet{position:absolute;left:12px;right:12px;bottom:12px;background:var(--white);border-radius:var(--r-md);padding:12px;box-shadow:0 -8px 24px -8px rgba(15,23,66,.25);}
+
+  /* chat */
+  .msg{max-width:75%;padding:9px 12px;border-radius:14px;font-size:11.5px;line-height:1.4;margin-bottom:8px;}
+  .msg.in{background:var(--white);border:1px solid var(--gray-200);border-bottom-left-radius:3px;align-self:flex-start;}
+  .msg.out{background:var(--blue-700);color:var(--white);border-bottom-right-radius:3px;align-self:flex-end;margin-left:auto;}
+  .msg-time{font-size:8.5px;color:var(--gray-400);text-align:center;margin:10px 0;}
+
+  /* accordion */
+  .acc{border:1px solid var(--gray-200);border-radius:var(--r-sm);margin-bottom:8px;overflow:hidden;background:var(--white);}
+  .acc-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:600;}
+  .acc-body{padding:0 12px 12px;font-size:11px;color:var(--gray-600);line-height:1.5;}
+
+  /* BROWSER FRAME (admin) */
+  .browser{
+    width:100%;max-width:1180px;background:var(--white);border-radius:16px;overflow:hidden;
+    box-shadow:0 24px 48px -18px rgba(15,23,66,.28);border:1px solid var(--gray-200);
+  }
+  .browser-bar{background:var(--gray-100);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-200);}
+  .browser-dot{width:9px;height:9px;border-radius:50%;}
+  .browser-url{margin-left:10px;background:var(--white);border-radius:7px;padding:5px 12px;font-size:10.5px;color:var(--gray-400);flex:1;max-width:280px;border:1px solid var(--gray-200);}
+  .admin-layout{display:flex;min-height:480px;}
+  .sidebar{width:190px;background:var(--navy);flex:none;padding:20px 14px;}
+  .sidebar .brand{color:var(--white);text-align:left;font-size:15px;margin-bottom:26px;}
+  .sidebar .navitem{flex-direction:row;justify-content:flex-start;gap:10px;color:rgba(255,255,255,.55);padding:9px 10px;border-radius:9px;margin-bottom:3px;}
+  .sidebar .navitem span{font-size:11.5px;}
+  .sidebar .navitem.active{background:rgba(255,255,255,.1);color:var(--white);}
+  .admin-main{flex:1;padding:24px 26px;background:var(--gray-100);}
+  .admin-main h2{font-family:'Sora';font-size:19px;margin:0 0 4px;color:var(--navy);}
+  .admin-main .sub{font-size:12px;color:var(--gray-400);margin:0 0 20px;}
+  .kpi-row{display:flex;gap:14px;margin-bottom:20px;}
+  .kpi{flex:1;background:var(--white);border-radius:12px;padding:16px;border:1px solid var(--gray-200);}
+  .kpi .num{font-family:'Sora';font-size:23px;font-weight:800;color:var(--navy);}
+  .kpi .lbl{font-size:11px;color:var(--gray-400);font-weight:600;margin-top:2px;}
+  .kpi .delta{font-size:10.5px;color:var(--green);font-weight:700;margin-top:6px;}
+  .bars{display:flex;align-items:flex-end;gap:8px;height:110px;background:var(--white);border-radius:12px;border:1px solid var(--gray-200);padding:16px;margin-bottom:20px;}
+  .bar{flex:1;background:linear-gradient(180deg,var(--blue-500),var(--blue-700));border-radius:5px 5px 0 0;}
+  table{width:100%;border-collapse:collapse;background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--gray-200);}
+  th,td{text-align:left;padding:11px 14px;font-size:11.5px;border-bottom:1px solid var(--gray-100);}
+  th{color:var(--gray-400);font-weight:700;text-transform:uppercase;font-size:9.5px;letter-spacing:.05em;background:var(--gray-100);}
+  td{color:var(--ink);font-weight:500;}
+  .tabs-row{display:flex;gap:6px;margin-bottom:16px;}
+  .tab{padding:8px 14px;font-size:11.5px;font-weight:700;border-radius:8px;color:var(--gray-400);}
+  .tab.active{background:var(--blue-700);color:var(--white);}
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+<defs>
+<symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-8.5 8.4H4l2.3-3.8A8.38 8.38 0 1121 11.5z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9h14v-9"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 012-2h2l2-2h4l2 2h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.4 7-13a7 7 0 10-14 0c0 5.6 7 13 7 13z"/><circle cx="12" cy="9" r="2.4"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.6l-9 9a5 5 0 01-7-7l9-9a3.5 3.5 0 015 5l-9 9a2 2 0 01-3-3l8.5-8.4"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 118 0v4"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 015.7 5l-6.6 6.6a2 2 0 01-2.8 0L3.4 10.3a2 2 0 010-2.8l1.4-1.4a2 2 0 012.8 0l2.1 2.1"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18"/><path d="M5 4h13l-3 4 3 4H5"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.8-2.5 1.7-2.5 3.5"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+</defs>
+</svg>
+
+<div class="page-head">
+  <div class="eyebrow">Bom Trabalho</div>
+  <h1 class="title">Todas as telas do app, com base no escopo aprovado</h1>
+  <p>Mockup navegável por módulo, cor predominante azul. Cada bloco de telas corresponde a um módulo do documento de escopo do app Bom Trabalho.</p>
+  <div class="legend">
+    <div class="legend-item"><span class="dot blue"></span> Telas do app (cliente / prestador)</div>
+  </div>
+</div>
+
+<!-- MODULE 1 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">1</div><h3 class="module-title">Cadastro e Autenticação</h3><span class="module-sub">5 telas</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Login</div><div class="phone"><div class="screen">
+      <div class="statusbar"><span>9:41</span><div class="icons"><div class="sb-bars"><span></span><span></span><span></span><span></span></div><div class="sb-batt"></div></div></div>
+      <div class="body white" style="padding-top:56px;">
+        <div class="logo-mark"><svg class="icon" style="color:#fff;width:26px;height:26px;"><use href="#i-pin"/></svg></div>
+        <p class="brand">Bom Trabalho</p>
+        <p class="tagline">Encontre o profissional certo perto de você</p>
+        <div class="field"><label>E-MAIL</label><div class="input">joana.silva@email.com</div></div>
+        <div class="field"><label>SENHA</label><div class="input">••••••••</div></div>
+        <p class="link" style="text-align:right;margin-bottom:16px;">Esqueci minha senha</p>
+        <div class="btn btn-primary">Entrar</div>
+        <div class="divider">novo por aqui?</div>
+        <div class="btn btn-secondary">Criar conta</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Escolha de perfil</div><div class="phone"><div class="screen">
+      <div class="statusbar"><span>9:41</span><div class="icons"><div class="sb-bars"><span></span><span></span><span></span><span></span></div><div class="sb-batt"></div></div></div>
+      <div class="body white" style="padding-top:30px;display:flex;flex-direction:column;">
+        <p class="brand" style="text-align:left;font-size:20px;">Como você vai usar o app?</p>
+        <p class="tagline" style="text-align:left;margin-bottom:22px;">Você poderá alterar isso depois, nas configurações do perfil.</p>
+        <div class="card" style="border:2px solid var(--blue-700);margin-bottom:12px;">
+          <div class="row"><div class="thumb"><svg class="icon"><use href="#i-search"/></svg></div>
+          <div><div style="font-weight:700;font-size:13px;">Sou cliente</div><div style="font-size:10.5px;color:var(--gray-400);">Quero contratar serviços</div></div></div>
+        </div>
+        <div class="card">
+          <div class="row"><div class="thumb"><svg class="icon"><use href="#i-tool"/></svg></div>
+          <div><div style="font-weight:700;font-size:13px;">Sou prestador</div><div style="font-size:10.5px;color:var(--gray-400);">Quero oferecer serviços</div></div></div>
+        </div>
+        <div style="flex:1;"></div>
+        <div class="btn btn-primary">Continuar</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Cadastro — Cliente</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Criar conta de cliente</h3></div>
+      <div class="body white">
+        <div class="field"><label>NOME COMPLETO</label><div class="input">Joana Silva</div></div>
+        <div class="field"><label>CPF</label><div class="input">000.000.000-00</div></div>
+        <div class="field"><label>E-MAIL</label><div class="input">joana.silva@email.com</div></div>
+        <div class="field"><label>TELEFONE</label><div class="input">(35) 90000-0000</div></div>
+        <div class="field"><label>SENHA</label><div class="input">••••••••</div></div>
+        <div class="checkrow"><div class="checkbox"><svg class="icon" style="color:#fff;width:10px;height:10px;"><use href="#i-check"/></svg></div>Li e aceito os Termos de Uso e a Política de Privacidade</div>
+        <div class="btn btn-primary">Criar conta</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Cadastro — Prestador</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Criar conta de prestador</h3></div>
+      <div class="body white">
+        <div class="field"><label>NOME COMPLETO</label><div class="input">Carlos Andrade</div></div>
+        <div class="field"><label>E-MAIL</label><div class="input">carlos.andrade@email.com</div></div>
+        <div class="field"><label>SENHA</label><div class="input">••••••••</div></div>
+        <p class="section-label" style="margin-top:6px;">Categorias de atuação</p>
+        <div class="chips">
+          <div class="chip on">Elétrica</div><div class="chip on">Hidráulica</div><div class="chip">Limpeza</div>
+          <div class="chip">Pintura</div><div class="chip">Montagem</div><div class="chip">Jardinagem</div>
+        </div>
+        <div class="checkrow" style="margin-top:14px;"><div class="checkbox"><svg class="icon" style="color:#fff;width:10px;height:10px;"><use href="#i-check"/></svg></div>Li e aceito os Termos de Uso e a Política de Privacidade</div>
+        <div class="btn btn-primary">Criar conta de prestador</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Recuperar senha</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Recuperar senha</h3></div>
+      <div class="body white" style="padding-top:24px;">
+        <div class="thumb" style="width:52px;height:52px;border-radius:16px;margin:0 auto 16px;"><svg class="icon" style="width:44%;height:44%;"><use href="#i-lock"/></svg></div>
+        <p class="tagline" style="font-size:12.5px;color:var(--ink);font-weight:600;text-align:center;">Esqueceu sua senha?</p>
+        <p class="tagline">Informe seu e-mail cadastrado e enviaremos um link para redefinir sua senha.</p>
+        <div class="field"><label>E-MAIL</label><div class="input">joana.silva@email.com</div></div>
+        <div class="btn btn-primary">Enviar link por e-mail</div>
+        <p class="link" style="margin-top:14px;">Voltar para o login</p>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 2 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">2</div><h3 class="module-title">Perfil de Usuário</h3><span class="module-sub">3 telas</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Perfil — Cliente</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Meu perfil</h3></div>
+      <div class="body white">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div class="avatar lg" style="margin:0 auto 8px;position:relative;"><svg class="icon"><use href="#i-user"/></svg>
+            <div style="position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;background:var(--blue-700);border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;"><svg class="icon" style="width:10px;height:10px;color:#fff;"><use href="#i-camera"/></svg></div>
+          </div>
+          <div style="font-weight:700;font-size:14px;">Joana Silva</div>
+        </div>
+        <div class="card"><div class="row between"><div><div style="font-size:9.5px;color:var(--gray-400);font-weight:700;">TELEFONE</div><div style="font-size:12px;font-weight:600;">(35) 90000-0000</div></div></div></div>
+        <div class="card"><div class="row between"><div><div style="font-size:9.5px;color:var(--gray-400);font-weight:700;">E-MAIL</div><div style="font-size:12px;font-weight:600;">joana.silva@email.com</div></div></div></div>
+        <div class="card"><div class="row between"><div><div style="font-size:9.5px;color:var(--gray-400);font-weight:700;">ENDEREÇO</div><div style="font-size:12px;font-weight:600;">Pouso Alegre, MG</div></div></div></div>
+        <div class="btn btn-secondary" style="margin-top:8px;">Editar perfil</div>
+      </div>
+      <div class="bottomnav">
+        <div class="navitem"><svg class="icon"><use href="#i-home"/></svg><span>Início</span></div>
+        <div class="navitem"><svg class="icon"><use href="#i-list"/></svg><span>Pedidos</span></div>
+        <div class="navitem"><svg class="icon"><use href="#i-chat"/></svg><span>Chat</span></div>
+        <div class="navitem active"><svg class="icon"><use href="#i-user"/></svg><span>Perfil</span></div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Perfil — Prestador</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Meu perfil profissional</h3></div>
+      <div class="body white">
+        <div style="text-align:center;margin-bottom:10px;">
+          <div class="avatar lg" style="margin:0 auto 8px;"><svg class="icon"><use href="#i-user"/></svg></div>
+          <div style="font-weight:700;font-size:14px;">Carlos Andrade</div>
+          <div class="row" style="justify-content:center;gap:4px;margin-top:3px;">
+            <div class="stars"><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon"><use href="#i-star"/></svg><svg class="icon off"><use href="#i-star"/></svg></div>
+            <span style="font-size:10.5px;color:var(--gray-400);font-weight:600;">4.2 (38)</span>
+          </div>
+        </div>
+        <p class="section-label">Sobre</p>
+        <p style="font-size:11px;color:var(--gray-600);line-height:1.5;">Eletricista com 8 anos de experiência em instalações residenciais e manutenção preventiva.</p>
+        <p class="section-label">Categorias</p>
+        <div class="chips"><div class="chip on">Elétrica</div><div class="chip on">Hidráulica</div></div>
+        <p class="section-label">Raio de atendimento</p>
+        <div class="card" style="padding:10px 12px;"><div class="row between"><span style="font-size:11.5px;font-weight:600;">Atende em até</span><span style="font-size:12px;font-weight:700;color:var(--blue-700);">10 km</span></div></div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Histórico de serviços</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Histórico</h3></div>
+      <div class="body">
+        <div class="row" style="gap:6px;margin-bottom:12px;">
+          <div class="chip on">Em andamento</div><div class="chip">Concluídos</div><div class="chip">Cancelados</div>
+        </div>
+        <div class="card"><div class="row between"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-tool"/></svg></div><div><div style="font-weight:700;font-size:12px;">Instalação elétrica</div><div style="font-size:10px;color:var(--gray-400);">12 jul · Carlos A.</div></div></div><span class="badge progress">Em andamento</span></div></div>
+        <div class="card"><div class="row between"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-tool"/></svg></div><div><div style="font-weight:700;font-size:12px;">Reparo hidráulico</div><div style="font-size:10px;color:var(--gray-400);">02 jul · Marcos L.</div></div></div><span class="badge done">Concluído</span></div></div>
+        <div class="card"><div class="row between"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-tool"/></svg></div><div><div style="font-weight:700;font-size:12px;">Limpeza pós-obra</div><div style="font-size:10px;color:var(--gray-400);">28 jun · Ana P.</div></div></div><span class="badge cancel">Cancelado</span></div></div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 3 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">3</div><h3 class="module-title">Categorias e Serviços</h3><span class="module-sub">1 tela</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Categorias / Buscar prestadores</div><div class="phone"><div class="screen">
+      <div class="statusbar"><span>9:41</span><div class="icons"><div class="sb-bars"><span></span><span></span><span></span><span></span></div><div class="sb-batt"></div></div></div>
+      <div class="body">
+        <p style="font-family:'Sora';font-weight:700;font-size:16px;margin:0 0 10px;">Olá, Joana 👋</p>
+        <div class="row" style="background:#fff;border-radius:10px;padding:9px 12px;border:1.5px solid var(--gray-200);margin-bottom:14px;">
+          <svg class="icon" style="color:var(--gray-400);"><use href="#i-search"/></svg>
+          <span style="font-size:11.5px;color:var(--gray-400);">Buscar categoria ou serviço</span>
+        </div>
+        <p class="section-label" style="margin-top:0;">Categorias</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
+          <div class="card" style="text-align:center;padding:10px 4px;"><svg class="icon" style="color:var(--blue-600);margin-bottom:4px;"><use href="#i-tool"/></svg><div style="font-size:9px;font-weight:700;">Elétrica</div></div>
+          <div class="card" style="text-align:center;padding:10px 4px;"><svg class="icon" style="color:var(--blue-600);margin-bottom:4px;"><use href="#i-tool"/></svg><div style="font-size:9px;font-weight:700;">Hidráulica</div></div>
+          <div class="card" style="text-align:center;padding:10px 4px;"><svg class="icon" style="color:var(--blue-600);margin-bottom:4px;"><use href="#i-home"/></svg><div style="font-size:9px;font-weight:700;">Limpeza</div></div>
+          <div class="card" style="text-align:center;padding:10px 4px;"><svg class="icon" style="color:var(--blue-600);margin-bottom:4px;"><use href="#i-grid"/></svg><div style="font-size:9px;font-weight:700;">Outros</div></div>
+        </div>
+        <p class="section-label">Prestadores perto de você</p>
+        <div class="card"><div class="row"><div class="avatar"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:700;font-size:12px;">Carlos Andrade</div><div class="row" style="gap:5px;"><div class="stars"><svg class="icon"><use href="#i-star"/></svg></div><span style="font-size:10px;color:var(--gray-400);">4.2 · Elétrica · 2,4 km</span></div></div></div></div>
+      </div>
+      <div class="bottomnav">
+        <div class="navitem active"><svg class="icon"><use href="#i-home"/></svg><span>Início</span></div>
+        <div class="navitem"><svg class="icon"><use href="#i-list"/></svg><span>Pedidos</span></div>
+        <div class="navitem"><svg class="icon"><use href="#i-chat"/></svg><span>Chat</span></div>
+        <div class="navitem"><svg class="icon"><use href="#i-user"/></svg><span>Perfil</span></div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 4 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">4</div><h3 class="module-title">Solicitação de Serviço</h3><span class="module-sub">3 telas</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Criar pedido</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Novo pedido</h3></div>
+      <div class="body white">
+        <div class="field"><label>CATEGORIA</label><div class="chip on" style="width:fit-content;">⚡ Elétrica</div></div>
+        <div class="field"><label>DESCREVA O PROBLEMA</label><textarea class="input" style="height:52px;">Tomada da cozinha parou de funcionar e o disjuntor desarma.</textarea></div>
+        <div class="field"><label>FOTOS</label>
+          <div class="row" style="gap:8px;">
+            <div class="thumb"><svg class="icon"><use href="#i-camera"/></svg></div>
+            <div class="thumb"><svg class="icon"><use href="#i-camera"/></svg></div>
+            <div class="thumb add"><svg class="icon" style="color:var(--blue-500);"><use href="#i-plus"/></svg></div>
+          </div>
+        </div>
+        <div class="field"><label>LOCALIZAÇÃO</label><div class="row card" style="padding:9px 12px;"><svg class="icon" style="color:var(--blue-600);"><use href="#i-pin"/></svg><span style="font-size:11.5px;font-weight:600;">Pouso Alegre, MG</span></div></div>
+        <div class="field"><label>DATA DESEJADA</label><div class="row card" style="padding:9px 12px;"><svg class="icon" style="color:var(--blue-600);"><use href="#i-cal"/></svg><span style="font-size:11.5px;font-weight:600;">18 de julho</span></div></div>
+        <div class="btn btn-primary">Publicar pedido</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Detalhe do pedido / status</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Pedido #1042</h3></div>
+      <div class="body">
+        <div class="row" style="margin-bottom:6px;">
+          <div class="step done"></div><div class="step-line done"></div>
+          <div class="step done"></div><div class="step-line"></div>
+          <div class="step"></div><div class="step-line"></div>
+          <div class="step"></div>
+        </div>
+        <div class="step-labels"><span>Aberto</span><span>Propostas</span><span>Andamento</span><span>Concluído</span></div>
+        <div class="card" style="margin-top:14px;">
+          <div class="chip on" style="width:fit-content;margin-bottom:8px;">⚡ Elétrica</div>
+          <p style="font-size:11.5px;color:var(--gray-600);margin:0 0 8px;">Tomada da cozinha parou de funcionar e o disjuntor desarma.</p>
+          <div class="row" style="gap:6px;"><div class="thumb" style="width:34px;height:34px;"><svg class="icon" style="width:40%;"><use href="#i-camera"/></svg></div><div class="thumb" style="width:34px;height:34px;"><svg class="icon" style="width:40%;"><use href="#i-camera"/></svg></div></div>
+        </div>
+        <div class="card"><div class="row" style="gap:6px;"><svg class="icon" style="color:var(--blue-600);width:15px;height:15px;"><use href="#i-pin"/></svg><span style="font-size:11px;">Pouso Alegre, MG</span></div></div>
+        <p class="section-label">Propostas recebidas (3)</p>
+        <div class="btn btn-secondary" style="margin-bottom:8px;">Ver propostas</div>
+        <div class="btn btn-danger">Cancelar pedido</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Pedidos abertos (prestador)</div><div class="phone"><div class="screen">
+      <div class="appbar"><h3>Pedidos disponíveis</h3><div class="icon-btn"><svg class="icon"><use href="#i-filter"/></svg></div></div>
+      <div class="body">
+        <div class="chips" style="margin-bottom:12px;"><div class="chip on">Elétrica</div><div class="chip">Hidráulica</div><div class="chip">Todos</div></div>
+        <div class="card">
+          <div class="row between" style="margin-bottom:6px;"><span class="chip" style="font-size:9px;">⚡ Elétrica</span><span style="font-size:10px;color:var(--gray-400);">2,4 km</span></div>
+          <p style="font-size:11.5px;margin:0 0 8px;font-weight:600;">Tomada da cozinha sem funcionar</p>
+          <div class="row between"><span style="font-size:10px;color:var(--gray-400);">Deseja: 18 jul</span><div class="btn btn-primary btn-sm">Enviar proposta</div></div>
+        </div>
+        <div class="card">
+          <div class="row between" style="margin-bottom:6px;"><span class="chip" style="font-size:9px;">⚡ Elétrica</span><span style="font-size:10px;color:var(--gray-400);">4,1 km</span></div>
+          <p style="font-size:11.5px;margin:0 0 8px;font-weight:600;">Instalação de chuveiro elétrico</p>
+          <div class="row between"><span style="font-size:10px;color:var(--gray-400);">Deseja: 20 jul</span><div class="btn btn-primary btn-sm">Enviar proposta</div></div>
+        </div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 5 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">5</div><h3 class="module-title">Intermediação / Orçamento</h3><span class="module-sub">2 telas</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Enviar proposta (prestador)</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Enviar proposta</h3></div>
+      <div class="body white">
+        <div class="card" style="background:var(--blue-050);"><p style="font-size:11px;font-weight:600;margin:0;">Tomada da cozinha sem funcionar</p><p style="font-size:10px;color:var(--gray-400);margin:2px 0 0;">Pedido #1042 · Elétrica</p></div>
+        <div class="field"><label>VALOR (R$)</label><div class="input">180,00</div></div>
+        <div class="field"><label>PRAZO ESTIMADO</label><div class="input">2 dias úteis</div></div>
+        <div class="field"><label>OBSERVAÇÕES</label><textarea class="input">Incluso troca da tomada e verificação do disjuntor.</textarea></div>
+        <div class="btn btn-primary">Enviar proposta</div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Propostas recebidas (cliente)</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Propostas (3)</h3></div>
+      <div class="body">
+        <div class="card">
+          <div class="row between">
+            <div class="row"><div class="avatar"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:700;font-size:12px;">Carlos Andrade</div><div class="stars"><svg class="icon"><use href="#i-star"/></svg><span style="font-size:9.5px;color:var(--gray-400);margin-left:3px;">4.2</span></div></div></div>
+            <div style="font-family:'Sora';font-weight:800;color:var(--blue-700);font-size:14px;">R$180</div>
+          </div>
+          <p style="font-size:10.5px;color:var(--gray-600);margin:8px 0;">Prazo: 2 dias · Inclui troca da tomada.</p>
+          <div class="row" style="gap:6px;"><div class="btn btn-primary btn-sm" style="flex:1;">Aceitar</div><div class="btn btn-ghost btn-sm" style="flex:1;">Recusar</div></div>
+        </div>
+        <div class="card">
+          <div class="row between">
+            <div class="row"><div class="avatar"><svg class="icon"><use href="#i-user"/></svg></div><div><div style="font-weight:700;font-size:12px;">Marcos Lima</div><div class="stars"><svg class="icon"><use href="#i-star"/></svg><span style="font-size:9.5px;color:var(--gray-400);margin-left:3px;">4.8</span></div></div></div>
+            <div style="font-family:'Sora';font-weight:800;color:var(--blue-700);font-size:14px;">R$210</div>
+          </div>
+          <p style="font-size:10.5px;color:var(--gray-600);margin:8px 0;">Prazo: 1 dia · Atendimento no mesmo dia.</p>
+          <div class="row" style="gap:6px;"><div class="btn btn-primary btn-sm" style="flex:1;">Aceitar</div><div class="btn btn-ghost btn-sm" style="flex:1;">Recusar</div></div>
+        </div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 6 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">6</div><h3 class="module-title">Chat / Comunicação</h3><span class="module-sub">1 tela</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Chat</div><div class="phone"><div class="screen">
+      <div class="appbar blue"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><div class="avatar" style="background:rgba(255,255,255,.2);"><svg class="icon" style="color:#fff;"><use href="#i-user"/></svg></div><h3>Carlos Andrade</h3></div>
+      <div class="body" style="display:flex;flex-direction:column;padding:14px;">
+        <div class="msg-time">Hoje, 14:02</div>
+        <div class="msg in">Oi Joana! Recebi sua solicitação, posso ir amanhã de manhã.</div>
+        <div class="msg out">Perfeito! Pode ser às 9h?</div>
+        <div class="msg in">Fechado, chego às 9h 👍</div>
+      </div>
+      <div class="row" style="padding:8px 12px 14px;gap:8px;border-top:1px solid var(--gray-100);">
+        <div class="icon-btn"><svg class="icon"><use href="#i-clip"/></svg></div>
+        <div class="input" style="flex:1;color:var(--gray-400);">Digite uma mensagem…</div>
+        <div class="icon-btn" style="background:var(--blue-700);"><svg class="icon" style="color:#fff;"><use href="#i-send"/></svg></div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 7 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">7</div><h3 class="module-title">Avaliações</h3><span class="module-sub">1 tela</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Avaliar prestador (com fotos)</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Avaliar serviço</h3></div>
+      <div class="body white">
+        <div class="card" style="background:var(--blue-050);text-align:center;">
+          <div class="avatar" style="margin:0 auto 6px;"><svg class="icon"><use href="#i-user"/></svg></div>
+          <div style="font-weight:700;font-size:12.5px;">Carlos Andrade</div>
+          <div style="font-size:10px;color:var(--gray-400);">Instalação elétrica · Pedido #1042</div>
+        </div>
+        <p class="section-label" style="text-align:center;">Como foi o serviço?</p>
+        <div class="row" style="justify-content:center;gap:8px;margin-bottom:16px;">
+          <svg class="icon" style="width:26px;height:26px;"><use href="#i-star"/></svg>
+          <svg class="icon" style="width:26px;height:26px;"><use href="#i-star"/></svg>
+          <svg class="icon" style="width:26px;height:26px;"><use href="#i-star"/></svg>
+          <svg class="icon" style="width:26px;height:26px;"><use href="#i-star"/></svg>
+          <svg class="icon off" style="width:26px;height:26px;"><use href="#i-star"/></svg>
+        </div>
+        <div class="field"><label>COMENTÁRIO</label><textarea class="input">Serviço rápido e bem explicado, recomendo!</textarea></div>
+        <div class="field">
+          <label>FOTOS DO SERVIÇO</label>
+          <div class="row" style="gap:8px;">
+            <div class="thumb"><svg class="icon"><use href="#i-camera"/></svg></div>
+            <div class="thumb add"><svg class="icon" style="color:var(--blue-500);"><use href="#i-plus"/></svg></div>
+          </div>
+        </div>
+        <div class="btn btn-primary">Enviar avaliação</div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 8 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">8</div><h3 class="module-title">Notificações</h3><span class="module-sub">1 tela</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Central de notificações</div><div class="phone"><div class="screen">
+      <div class="appbar"><h3>Notificações</h3></div>
+      <div class="body">
+        <div class="card"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-tool"/></svg></div><div style="flex:1;"><div style="font-size:11.5px;font-weight:700;">Nova proposta recebida</div><div style="font-size:10px;color:var(--gray-400);">Carlos enviou uma proposta · agora</div></div><div style="width:7px;height:7px;border-radius:50%;background:var(--blue-700);"></div></div></div>
+        <div class="card"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-check"/></svg></div><div style="flex:1;"><div style="font-size:11.5px;font-weight:700;">Proposta aceita</div><div style="font-size:10px;color:var(--gray-400);">Joana aceitou sua proposta · 2h</div></div></div></div>
+        <div class="card"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-chat"/></svg></div><div style="flex:1;"><div style="font-size:11.5px;font-weight:700;">Nova mensagem</div><div style="font-size:10px;color:var(--gray-400);">Carlos: "Chego às 9h" · 3h</div></div></div></div>
+        <div class="card"><div class="row"><div class="thumb"><svg class="icon"><use href="#i-flag"/></svg></div><div style="flex:1;"><div style="font-size:11.5px;font-weight:700;">Status do pedido alterado</div><div style="font-size:10px;color:var(--gray-400);">Pedido #1042 está em andamento · 1d</div></div></div></div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 9 -->
+<div class="module">
+  <div class="module-head"><div class="module-num">9</div><h3 class="module-title">Localização / Geolocalização</h3><span class="module-sub">1 tela</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">Mapa — prestadores próximos</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Perto de você</h3></div>
+      <div class="body nopad">
+        <div class="mapbg"></div>
+        <div class="pin me" style="top:44%;left:46%;"><svg class="icon"><use href="#i-user"/></svg></div>
+        <div class="pin" style="top:26%;left:24%;"><svg class="icon"><use href="#i-tool"/></svg></div>
+        <div class="pin" style="top:60%;left:66%;"><svg class="icon"><use href="#i-tool"/></svg></div>
+        <div class="pin" style="top:70%;left:30%;"><svg class="icon"><use href="#i-tool"/></svg></div>
+        <div class="sheet">
+          <div class="row"><div class="avatar"><svg class="icon"><use href="#i-user"/></svg></div><div style="flex:1;"><div style="font-weight:700;font-size:12px;">Carlos Andrade</div><div style="font-size:10px;color:var(--gray-400);">Elétrica · 2,4 km de você</div></div><div class="btn btn-primary btn-sm">Ver</div></div>
+        </div>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- MODULE 11 (FAQ + reclamação) -->
+<div class="module">
+  <div class="module-head"><div class="module-num">10</div><h3 class="module-title">Suporte e Reclamações</h3><span class="module-sub">2 telas</span></div>
+  <div class="screens-grid">
+
+    <div class="screen-block"><div class="screen-label">FAQ</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Central de ajuda</h3></div>
+      <div class="body">
+        <div class="row" style="background:#fff;border-radius:10px;padding:9px 12px;border:1.5px solid var(--gray-200);margin-bottom:12px;">
+          <svg class="icon" style="color:var(--gray-400);"><use href="#i-search"/></svg><span style="font-size:11px;color:var(--gray-400);">Buscar dúvida</span>
+        </div>
+        <div class="chips" style="margin-bottom:12px;"><div class="chip on">Pedidos</div><div class="chip">Pagamentos</div><div class="chip">Conta</div></div>
+        <div class="acc"><div class="acc-head">Como cancelo um pedido? <svg class="icon" style="width:13px;height:13px;color:var(--gray-400);"><use href="#i-back" style="transform:rotate(-90deg)"/></svg></div></div>
+        <div class="acc"><div class="acc-head">Como funciona o aceite de propostas?</div><div class="acc-body">Ao aceitar uma proposta, as demais são recusadas automaticamente e o chat com o prestador é liberado.</div></div>
+        <div class="acc"><div class="acc-head">Como avalio um prestador?</div></div>
+      </div>
+    </div></div></div>
+
+    <div class="screen-block"><div class="screen-label">Abrir reclamação</div><div class="phone"><div class="screen">
+      <div class="appbar"><div class="icon-btn"><svg class="icon"><use href="#i-back"/></svg></div><h3>Abrir reclamação</h3></div>
+      <div class="body white">
+        <div class="card" style="background:var(--blue-050);"><p style="font-size:11px;font-weight:600;margin:0;">Instalação elétrica</p><p style="font-size:10px;color:var(--gray-400);margin:2px 0 0;">Pedido #1042 · Carlos Andrade</p></div>
+        <p class="section-label" style="margin-top:12px;">Motivo</p>
+        <div class="chips" style="margin-bottom:12px;">
+          <div class="chip on">Serviço não realizado</div><div class="chip">Cobrança indevida</div><div class="chip">Comportamento</div><div class="chip">Outro</div>
+        </div>
+        <div class="field"><label>DESCREVA O OCORRIDO</label><textarea class="input" style="height:64px;">O prestador não compareceu no horário combinado e não avisou.</textarea></div>
+        <div class="field"><label>ANEXAR EVIDÊNCIAS (OPCIONAL)</label><div class="row" style="gap:8px;"><div class="thumb add"><svg class="icon" style="color:var(--blue-500);"><use href="#i-plus"/></svg></div></div></div>
+        <div class="btn btn-primary">Enviar reclamação</div>
+        <p style="font-size:9.5px;color:var(--gray-400);text-align:center;margin-top:8px;">Nossa equipe analisa em até 48h.</p>
+      </div>
+    </div></div></div>
+
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="module">
+  <div class="module-head"><div class="module-num">A</div><h3 class="module-title">Backend Administrativo</h3><span class="module-sub">painel web · 4 telas</span></div>
+  <div class="screens-grid" style="flex-direction:column;">
+
+    <div class="browser" style="margin-bottom:30px;">
+      <div class="browser-bar"><div class="browser-dot" style="background:#EF6A5F;"></div><div class="browser-dot" style="background:#F5BD4F;"></div><div class="browser-dot" style="background:#61C454;"></div><div class="browser-url">admin.bomtrabalho.com/login</div></div>
+      <div class="admin-layout" style="align-items:center;justify-content:center;">
+        <div style="width:320px;padding:40px 0;">
+          <div class="logo-mark" style="background:var(--navy);"><svg class="icon" style="color:#fff;width:26px;height:26px;"><use href="#i-pin"/></svg></div>
+          <p class="brand">Painel Administrativo</p>
+          <p class="tagline">Acesso restrito à equipe Bom Trabalho</p>
+          <div class="field"><label>E-MAIL CORPORATIVO</label><div class="input">admin@bomtrabalho.com</div></div>
+          <div class="field"><label>SENHA</label><div class="input">••••••••</div></div>
+          <div class="btn btn-primary">Entrar no painel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="browser" style="margin-bottom:30px;">
+      <div class="browser-bar"><div class="browser-dot" style="background:#EF6A5F;"></div><div class="browser-dot" style="background:#F5BD4F;"></div><div class="browser-dot" style="background:#61C454;"></div><div class="browser-url">admin.bomtrabalho.com/dashboard</div></div>
+      <div class="admin-layout">
+        <div class="sidebar">
+          <div class="brand">Bom Trabalho</div>
+          <div class="navitem active"><svg class="icon"><use href="#i-grid"/></svg><span>Dashboard</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-user"/></svg><span>Usuários</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-tool"/></svg><span>Categorias</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-list"/></svg><span>Pedidos</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-star"/></svg><span>Avaliações</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-flag"/></svg><span>Reclamações</span></div>
+        </div>
+        <div class="admin-main">
+          <h2>Visão geral</h2>
+          <p class="sub">Indicadores gerais da plataforma</p>
+          <div class="kpi-row">
+            <div class="kpi"><div class="num">4.812</div><div class="lbl">Total de usuários</div><div class="delta">+6,2% este mês</div></div>
+            <div class="kpi"><div class="num">312</div><div class="lbl">Pedidos abertos</div></div>
+            <div class="kpi"><div class="num">2.108</div><div class="lbl">Pedidos concluídos</div><div class="delta">+11% este mês</div></div>
+            <div class="kpi"><div class="num">14</div><div class="lbl">Reclamações pendentes</div></div>
+          </div>
+          <div class="bars">
+            <div class="bar" style="height:40%"></div><div class="bar" style="height:65%"></div><div class="bar" style="height:50%"></div>
+            <div class="bar" style="height:80%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:70%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="browser" style="margin-bottom:30px;">
+      <div class="browser-bar"><div class="browser-dot" style="background:#EF6A5F;"></div><div class="browser-dot" style="background:#F5BD4F;"></div><div class="browser-dot" style="background:#61C454;"></div><div class="browser-url">admin.bomtrabalho.com/usuarios</div></div>
+      <div class="admin-layout">
+        <div class="sidebar">
+          <div class="brand">Bom Trabalho</div>
+          <div class="navitem"><svg class="icon"><use href="#i-grid"/></svg><span>Dashboard</span></div>
+          <div class="navitem active"><svg class="icon"><use href="#i-user"/></svg><span>Usuários</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-tool"/></svg><span>Categorias</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-list"/></svg><span>Pedidos</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-star"/></svg><span>Avaliações</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-flag"/></svg><span>Reclamações</span></div>
+        </div>
+        <div class="admin-main">
+          <h2>Gestão de usuários</h2>
+          <p class="sub">Clientes e prestadores cadastrados na plataforma</p>
+          <table>
+            <tr><th>Nome</th><th>Tipo</th><th>E-mail</th><th>Status</th><th>Ações</th></tr>
+            <tr><td>Joana Silva</td><td>Cliente</td><td>joana.silva@email.com</td><td><span class="badge done">Ativo</span></td><td><svg class="icon" style="width:15px;height:15px;color:var(--gray-400);margin-right:8px;"><use href="#i-eye"/></svg><svg class="icon" style="width:15px;height:15px;color:var(--red);"><use href="#i-ban"/></svg></td></tr>
+            <tr><td>Carlos Andrade</td><td>Prestador</td><td>carlos.andrade@email.com</td><td><span class="badge done">Ativo</span></td><td><svg class="icon" style="width:15px;height:15px;color:var(--gray-400);margin-right:8px;"><use href="#i-eye"/></svg><svg class="icon" style="width:15px;height:15px;color:var(--red);"><use href="#i-ban"/></svg></td></tr>
+            <tr><td>Marcos Lima</td><td>Prestador</td><td>marcos.lima@email.com</td><td><span class="badge cancel">Bloqueado</span></td><td><svg class="icon" style="width:15px;height:15px;color:var(--gray-400);margin-right:8px;"><use href="#i-eye"/></svg><svg class="icon" style="width:15px;height:15px;color:var(--green);"><use href="#i-check"/></svg></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="browser">
+      <div class="browser-bar"><div class="browser-dot" style="background:#EF6A5F;"></div><div class="browser-dot" style="background:#F5BD4F;"></div><div class="browser-dot" style="background:#61C454;"></div><div class="browser-url">admin.bomtrabalho.com/moderacao</div></div>
+      <div class="admin-layout">
+        <div class="sidebar">
+          <div class="brand">Bom Trabalho</div>
+          <div class="navitem"><svg class="icon"><use href="#i-grid"/></svg><span>Dashboard</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-user"/></svg><span>Usuários</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-tool"/></svg><span>Categorias</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-list"/></svg><span>Pedidos</span></div>
+          <div class="navitem"><svg class="icon"><use href="#i-star"/></svg><span>Avaliações</span></div>
+          <div class="navitem active"><svg class="icon"><use href="#i-flag"/></svg><span>Reclamações</span></div>
+        </div>
+        <div class="admin-main">
+          <h2>Moderação</h2>
+          <p class="sub">Pedidos, avaliações e reclamações reportadas</p>
+          <div class="tabs-row"><div class="tab">Pedidos</div><div class="tab">Avaliações</div><div class="tab active">Reclamações</div></div>
+          <table>
+            <tr><th>Pedido</th><th>Motivo</th><th>Aberta por</th><th>Status</th><th>Ações</th></tr>
+            <tr><td>#1042</td><td>Não compareceu</td><td>Joana Silva</td><td><span class="badge open">Em análise</span></td><td><span class="link" style="font-size:11px;">Ver detalhes</span></td></tr>
+            <tr><td>#1039</td><td>Cobrança indevida</td><td>Marcos Lima</td><td><span class="badge done">Resolvida</span></td><td><span class="link" style="font-size:11px;">Ver detalhes</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
